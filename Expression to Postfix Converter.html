@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Expression to Postfix Converter</title>
+  <style>
+    .container {
+  max-width: 600px;
+  margin: 0 0;
+  padding: 20px;
+}
+.parent{
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  justify-content: space-evenly;
+
+}
+.bigcont{
+  display:flex;
+  margin: 0 auto;
+}
+.display{
+  display: flex;
+  flex-direction: column;
+  width:50%;
+
+}
+.actions{
+  background-color: blueviolet;
+  min-height: 300px;
+  border: 5px solid black;
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  padding-left: 20px;
+}
+h1, h2 {
+  text-align: center;
+}
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+}
+.textstyle{
+  font-size: 35px;
+  color: white;
+  padding-left: 10px;
+  padding-bottom: 5px;
+}
+input[type="text"] {
+  width: 20px;
+  padding: 8px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.stack {
+  width: 120px;
+  display: flex;
+  flex-direction: column-reverse;
+  height: auto;
+  border-radius: 4px;
+  margin-left: 30px;
+  font-size: 20px;
+  color: white;
+}
+
+.element {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+  font-size: 50px;
+  opacity: 0;
+  border: 3px solid black;
+  animation: fadeIn 0.5s ease forwards;
+}
+#exp{
+  text-align: center;
+  font-size: 30px;
+  height: 30px;
+}
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="parent">
+  <div class="container">
+    <h1>Expression to Postfix Converter</h1>
+    <label for="expression">Enter an Expression:</label>
+    <div id="inputbox">
+      <input type="text" id="expression1" onkeydown="jumpToNextTextBox(this, 'expression2')">
+      <input type="text" id="expression2" onkeydown="jumpToNextTextBox(this, 'expression3')">
+      <input type="text" id="expression3" onkeydown="jumpToNextTextBox(this, 'expression4')">
+      <input type="text" id="expression4" onkeydown="jumpToNextTextBox(this, 'expression5')">
+      <input type="text" id="expression5" onkeydown="jumpToNextTextBox(this, 'expression6')">
+      <input type="text" id="expression6" onkeydown="jumpToNextTextBox(this, 'expression7')">
+      <input type="text" id="expression7" onkeydown="jumpToNextTextBox(this, 'expression8')">
+      <input type="text" id="expression8" onkeydown="jumpToNextTextBox(this, 'expression9')">
+      <input type="text" id="expression9" onkeydown="jumpToNextTextBox(this, 'expression10')">
+      <input type="text" id="expression10" onkeydown="jumpToNextTextBox(this, 'expression11')">
+      <input type="text" id="expression11" onkeydown="jumpToNextTextBox(this, 'expression12')">
+      <input type="text" id="expression12" onkeydown="jumpToNextTextBox(this, 'expression13')"><br>
+      <input type="text" id="expression13" onkeydown="jumpToNextTextBox(this, 'expression14')">
+      <input type="text" id="expression14" onkeydown="jumpToNextTextBox(this, 'expression15')">
+      <input type="text" id="expression15" onkeydown="jumpToNextTextBox(this, 'expression16')">
+      <input type="text" id="expression16" onkeydown="jumpToNextTextBox(this, 'expression17')">
+      <input type="text" id="expression17" onkeydown="jumpToNextTextBox(this, 'expression18')">
+      <input type="text" id="expression18" onkeydown="jumpToNextTextBox(this, 'expression19')">
+      <input type="text" id="expression19" onkeydown="jumpToNextTextBox(this, 'expression20')">
+      <input type="text" id="expression20" onkeydown="jumpToNextTextBox(this, 'expression21')">
+      <input type="text" id="expression21" onkeydown="jumpToNextTextBox(this, 'expression22')">
+      <input type="text" id="expression22" onkeydown="jumpToNextTextBox(this, 'expression23')">
+      <input type="text" id="expression23" onkeydown="jumpToNextTextBox(this, 'expression24')">
+      <input type="text" id="expression24"><br>
+    </div>
+    <button onclick="next()">Simulate</button>
+    <button onclick="reset()">Reset</button>
+    <button onclick="auto()">Automate</button>
+    <div>
+      <h2>Postfix Expression:</h2>
+      <div id="postfixExpression">
+        <p id="exp"></p>
+      </div>
+    </div>
+  </div>
+  <div class="display">
+    <h1>Terminal</h1>
+    <div class='actions'></div></div>
+  <div class="stack">
+    <div class="element"></div>
+    <div class="element"></div>
+    <div class="element"></div>
+    <div class="element"></div>
+    <div class="element"></div>
+    <div class="element"></div>
+    <div class="element"></div>
+    <div class="element"></div>
+    <div class="element"></div>
+    <div class="element"></div>
+    <div class="element"></div>
+    <div class="element"></div>
+  </div>
+  </div>
+  <script>
+    var stack = [];
+var child = 0;
+var postfix = '';
+var se = document.getElementsByClassName('stack')[0];
+var display = document.getElementsByClassName('actions')[0];
+var inputbox = document.getElementById('inputbox');
+var inchild = 0;
+
+function auto() {
+  setInterval(next,2000);
+}
+
+function next() {
+  var char = inputbox.children[inchild].value;
+  inchild++;
+  infixToPostfix(char);
+  document.getElementById('exp').innerHTML = postfix;
+}
+function reset() {
+  location.reload();
+}
+function addParagraph(theValue) {
+  var paragraph = document.createElement("div");
+  paragraph.classList.add('textstyle')
+  if (theValue === ''){
+    ;
+  }
+  else{
+  paragraph.textContent = theValue;
+  display.appendChild(paragraph);
+  }
+}
+function precedence(operator) {
+  switch (operator) {
+    case '+':
+    case '-':
+      return 1;
+    case '*':
+    case '/':
+      return 2;
+    case '^':
+      return 3;
+    default:
+      return 0;
+  }
+}
+
+function isOperator(char) {
+  return ['+', '-', '*', '/'].includes(char);
+}
+
+function infixToPostfix(char) {
+  if (char.match(/[a-zA-Z0-9]/)) {
+    postfix += char;
+    setTimeout(addParagraph, 1, `operand ${char} added to postfix`);
+  } 
+  else if (char === '(') {
+    stack.push(char);
+    se.children[child].innerHTML = char;
+    child = child + 1;
+    setTimeout(addParagraph, 10, `operator ${char} pushed to stack`);
+  } 
+  else if (char === ')') {
+    while (stack.length > 0 && stack[stack.length - 1] != '(') {
+      var pop = stack.pop();
+      postfix += pop;
+      se.children[child - 1].innerHTML = '';
+      child = child - 1;
+      setTimeout(addParagraph, 10, `operator ${pop} poped from stack`);
+    }
+    if (stack[stack.length - 1] === '(') {
+      var pop = stack.pop();
+      se.children[child - 1].innerHTML = '';
+      child = child - 1;
+      setTimeout(addParagraph, 1, `operator ${pop} poped from stack`);
+    }
+  } 
+  else {
+    while (
+      stack.length > 0 &&
+      isOperator(stack[stack.length - 1]) &&
+      precedence(char) <= precedence(stack[stack.length - 1])
+    ) {
+      var pop = stack.pop();
+      postfix += pop;
+      se.children[child - 1].innerHTML = '';
+      child = child - 1;
+      setTimeout(addParagraph, 10, `operator ${pop} poped from stack`);
+    }
+    if(char != ''){
+      stack.push(char);
+      se.children[child].innerHTML = char;
+      child = child + 1;
+      setTimeout(addParagraph, 10, `operator ${char} pushed to stack`);
+    }
+  } 
+}
+function jumpToNextTextBox(currentTextBox, nextTextBoxId) {
+  var nextTextBox = document.getElementById(nextTextBoxId);
+
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    nextTextBox.focus();
+  }
+}
+  </script>
+</body>
+</html>
